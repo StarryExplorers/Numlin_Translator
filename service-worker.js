@@ -2,6 +2,7 @@ const cacheName = 'numlin-v1';
 const filesToCache = [
   './',
   './index.html',
+  './what-is-numlin.html',
   './manifest.json',
   './icon.png'
 ];
