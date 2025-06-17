@@ -2,6 +2,10 @@
 <html>
 <head>
   <title>Numlin Translator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fdf6e3">
+  <link rel="manifest" href="manifest.json">
+
   <style>
     body {
       font-family: monospace;
@@ -41,7 +45,7 @@
   <textarea id="result" readonly></textarea>
 
   <script>
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
 
     function toNumlin() {
       const text = document.getElementById("inputText").value.toUpperCase();
@@ -56,7 +60,7 @@
         }
       }
       document.getElementById("result").value = result;
-    }
+    } 
 
     function toEnglish() {
       const text = document.getElementById("inputText").value.trim();
@@ -76,6 +80,19 @@
         result += " ";
       }
       document.getElementById("result").value = result.trim();
+    }
+  </script>
+
+  <script>
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(function(reg) {
+          console.log("✅ Service Worker registered!", reg.scope);
+        })
+        .catch(function(error) {
+          console.error("❌ Service Worker registration failed:", error);
+        });
     }
   </script>
 </body>
