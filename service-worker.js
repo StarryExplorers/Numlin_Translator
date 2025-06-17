@@ -4,7 +4,8 @@ const filesToCache = [
   './index.html',
   './what-is-numlin.html',
   './manifest.json',
-  './icon.png'
+  './icon-512.png',
+  './icon-192.png',
 ];
 
 self.addEventListener('install', (e) => {
