@@ -6,6 +6,13 @@
   <meta name="theme-color" content="#fdf6e3">
   <link rel="manifest" href="manifest.json">
 
+  <!-- 🔐 Redirect to SparkLogin if not logged in -->
+  <script>
+    if (!localStorage.getItem("loggedInUser")) {
+      window.location.href = "https://starryexplorers.github.io/SparkLogin/?redirect=Numlin_Translator";
+    }
+  </script>
+
   <style>
     body {
       font-family: monospace;
@@ -15,6 +22,22 @@
     }
     h1 {
       color: #d33682;
+      margin-bottom: 5px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+    }
+    .logout-btn {
+      background: transparent;
+      border: none;
+      color: #cb4b16;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1em;
     }
     textarea {
       width: 100%;
@@ -37,9 +60,13 @@
   </style>
 </head>
 <body>
-  <h1>🔤 Numlin Translator by Spark</h1>
+  <!-- 🔐 Top Bar -->
+  <div class="top-bar">
+    <div id="userEmail">Logged in as: ...</div>
+    <button class="logout-btn" onclick="logout()">Log Out</button>
+  </div>
 
-  <!-- 🔗 Link to the new guide page -->
+  <h1>🔤 Numlin Translator by Spark</h1>
   <p><a href="what-is-numlin.html">❓ What is Numlin?</a></p>
 
   <textarea id="inputText" placeholder="Type your message here..."></textarea><br>
@@ -49,6 +76,7 @@
   <textarea id="result" readonly></textarea>
 
   <script>
+    // 🧠 Numlin logic
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
 
     function toNumlin() {
@@ -85,10 +113,20 @@
       }
       document.getElementById("result").value = result.trim();
     }
+
+    // 🔐 Show logged-in email
+    const user = localStorage.getItem("loggedInUser");
+    document.getElementById("userEmail").innerText = "Logged in as: " + user;
+
+    // 🔓 Logout
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "https://starryexplorers.github.io/SparkLogin/";
+    }
   </script>
 
+  <!-- 📦 PWA support -->
   <script>
-    // Service Worker registration
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
         .then(function(reg) {
