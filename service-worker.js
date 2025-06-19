@@ -1,21 +1,51 @@
-const cacheName = 'numlin-v1';
-const filesToCache = [
-  './',
-  './index.html',
-  './what-is-numlin.html',
-  './manifest.json',
-  './icon-512.png',
-  './icon-192.png',
+const CACHE_NAME = 'spark-numlin-v1';
+const FILES_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/what-is-numlin.html',
+  '/service-worker.js',
 ];
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(cacheName).then((cache) => cache.addAll(filesToCache))
+// Cache essential files during install
+self.addEventListener('install', event => {
+  console.log('[SW] Installing and caching');
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+  );
+  self.skipWaiting();
+});
+
+// Remove old cache during activation
+self.addEventListener('activate', event => {
+  console.log('[SW] Activating');
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            console.log(`[SW] Deleting old cache: ${key}`);
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+// Fetch from cache, fall back to network
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(cachedResp => {
+      return cachedResp || fetch(event.request);
+    })
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
-  );
+// Skip waiting if told to
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
