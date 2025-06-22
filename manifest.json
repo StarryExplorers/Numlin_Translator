@@ -2,14 +2,11 @@
   "name": "Numlin Translator",
   "short_name": "Numlin",
   "start_url": "index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#fdf6e3",
   "theme_color": "#fdf6e3",
   "description": "A secret language translator created by Spark! Translate between English and Numlin instantly.",
-  "id": "/",
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
   "icons": [
     {
       "src": "icon-192.png",
