@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fdf6e3">
   <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <style>
     body {
       font-family: monospace;
@@ -193,30 +194,30 @@
     if (savedUser) showApp(savedUser);
   </script>
 
+  <!-- PWA: service worker registration -->
   <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js').then(reg => {
-      reg.onupdatefound = () => {
-        const newWorker = reg.installing;
-        newWorker.onstatechange = () => {
-          if (newWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              const update = confirm("🔄 A new version is available. Do you want to update?");
-              if (update) {
-                newWorker.postMessage({ action: 'SKIP_WAITING' });
-                window.location.reload();
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').then(reg => {
+        reg.onupdatefound = () => {
+          const newWorker = reg.installing;
+          newWorker.onstatechange = () => {
+            if (newWorker.state === 'installed') {
+              if (navigator.serviceWorker.controller) {
+                const update = confirm("🔄 A new version is available. Do you want to update?");
+                if (update) {
+                  newWorker.postMessage({ action: 'SKIP_WAITING' });
+                  window.location.reload();
+                }
               }
             }
-          }
+          };
         };
-      };
-    });
+      });
 
-    // Listen to the message to skip waiting
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log("🔥 Controller changed — app updated");
-    });
-  }
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log("🔥 Controller changed — app updated");
+      });
+    }
   </script>
 </body>
-  </html>
+</html>
